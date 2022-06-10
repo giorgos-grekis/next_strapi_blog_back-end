@@ -1,0 +1,49 @@
+ const [values, setValues] = useState({
+    name: "",
+    performers: "",
+    venue: "",
+    address: "",
+    date: "",
+    time: "",
+    description: "",
+  });
+
+
+ const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  };
+  
+  
+  return (
+  
+  <>
+  {/* name */}
+  <div>
+    <label htmlFor="name">Event Name</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      value={values.name}
+      onChange={handleInputChange}
+    />
+  </div>
+
+  {/* performers */}
+  <div>
+    <label htmlFor="performers">Performers</label>
+    <input
+      type="text"
+      id="performers"
+      name="performers"
+      value={values.performers}
+      onChange={handleInputChange}
+    />
+  </div>
+  
+  ...
+  
+  </>
+  
+  )

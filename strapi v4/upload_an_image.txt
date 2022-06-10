@@ -1,0 +1,86 @@
+     
+     const formData = new FormData();
+     
+     // we take image value by "e.target.files[0]"
+     
+     let image = {
+      name: "event5.jpg", 
+      lastModified: 1616598955000, 
+      webkitRelativePath: "", 
+      size: 336372, 
+      type: "image/jpeg" 
+      }
+     
+     
+     formData.append('files', image); // store all the data we need
+
+     // we need to conect the image into a particular event
+     formData.append('ref', 'api::eventss.eventss') // collection we want to use (name of the collection singular)
+     formData.append('refId', evtId) // event id 
+     formData.append('field', 'image') // mane of the field
+
+  
+     const res = await fetch(`${API_URL}/api/upload`, {
+        method: 'POST',
+        body: formData,
+    });
+    
+    
+    
+    
+    /************   code        *******************/
+	import React, { useState } from "react";	
+	import { API_URL } from "@config/index";
+
+
+ const ImageUpload = ({ evtId, imageUploaded }) => {  
+ 
+  const [image, setImage] = useState(null); 
+  
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    const formData = new FormData();
+  
+    formData.append('files', image);
+
+     // we need to conect the image into a particular event
+     formData.append('ref', 'api::eventss.eventss') // collection we want to use
+     formData.append('refId', evtId) // enevt id
+     formData.append('field', 'image') // mane of the field
+     
+
+     // we call /api/upload endpoint to upload a file
+       const res = await fetch(`${API_URL}/api/upload`, {
+        method: 'POST',
+        body: formData,
+    });
+
+
+     
+    if(res.ok){
+    // this call a function to parent to close modal and setImage to new image we upload
+        imageUploaded()
+    }
+
+  };
+    
+    
+     const handleFileChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+    
+    return (
+    <form onSubmit={handleSubmit}>
+        <div className={styles.file}>
+          <input type="file" onChange={handleFileChange} />
+        </div>
+        <input type="submit" value="Upload" className="btn" />
+      </form>
+    )
+    
+    
+   export default ImageUpload;
+   
+  /************  end of  code        *******************/

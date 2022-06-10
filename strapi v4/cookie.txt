@@ -1,0 +1,39 @@
+// Create a cookie
+
+npm i cookie
+
+
+
+import cookie from "cookie";
+
+cookie.serialize("cookie_name", cookie_value,  {an object})
+
+ res.setHeader(
+        "Set-Cookie",
+        cookie.serialize("token", data.jwt, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== "development",
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+          sameSite: "strict",
+          path: "/",
+        })
+      );
+      
+      
+ We can access this cookie only via server
+ 
+ export async function getServerSideProps({ params: { id }, req }) {
+  const res = await fetch(`${API_URL}/api/eventsses/${id}?populate=*`);
+	
+  // access cookie	
+  console.log(req.headers.cookie)
+
+  const evt = await res.json();
+
+  return {
+    props: {
+      evt,
+    },
+  };
+}
+

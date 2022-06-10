@@ -1,0 +1,40 @@
+The models folder no longer exists. Instead,
+inside of 
+
+src/api/event/content-types/event, 
+
+create a new file named lifecycles.js.
+
+
+The format of the exported object has changed as well. 
+Below is how I implemented it to finally successfully create the slug and add it to the database.
+
+
+/*********************                 ************************/
+
+    const slugify = require("slugify");
+     
+    module.exports = {
+      beforeCreate(createdEvent) {
+        const { data } = createdEvent.params;
+     
+        if (data.title) {
+          data.slug = slugify(data.title, { lower: true });
+        }
+      },
+     
+      beforeUpdate(updatedEvent) {
+        const { data } = updatedEvent.params;
+     
+        if (data.title) {
+          data.slug = slugify(data.title, { lower: true });
+        }
+      },
+    };
+    
+/*********************                 ************************/
+    
+    
+    
+ if there is no title contect-type remane title with that 
+ 

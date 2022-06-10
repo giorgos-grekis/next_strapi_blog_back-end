@@ -1,0 +1,132 @@
+1. strapi returns if has pagination total in meta 
+
+config/index.js  --> export const PER_PAGE = 2
+
+2. In pagination object calulate the start point, pageCount we store in global variable
+
+const start = pageCount === 1 ? 0 : (pageCount - 1) * PER_PAGE;
+
+3. then we nned to cout the totalPage, strapi returns total if pagination add at qs string {data: {...}, meta: {..., total: 6}}
+
+
+4. Create a Pagination Component and pass props pageCount, totalPage
+
+
+5. In Pagintion component show show 
+pageCount > 1 --> Prev Page
+pageCount < lastPage  -->Next Page
+
+/**********  paernt **********/
+
+import Layout from "@components/Layout";
+import EventItem from "@components/EventItem";
+import { API_URL, PER_PAGE } from "@config/index";
+import Pagination from "@components/Pagination";
+const qs = require("qs");
+
+
+
+export default function EventPage({ events, pageCount }) {
+  const totalPage = events?.meta?.pagination?.total;
+
+
+  return (
+    <Layout>
+    
+      {events?.data?.map((evt) => (
+        <EventItem key={evt.id} evt={evt} />
+      ))}
+
+	{/* pagination */}
+      <Pagination pageCount={pageCount} totalPage={totalPage} />
+  
+    </Layout>
+  );
+}
+
+export async function getServerSideProps({ query: { page = 1 } }) {
+  // convert page to naumber
+  let pageCount = Number(page);
+
+  // Calculate start page
+  const start = pageCount === 1 ? 0 : (pageCount - 1) * PER_PAGE;
+
+  const query = qs.stringify(
+    {
+      sort: ["date:asc"],
+
+      pagination: {
+        start: start,
+        limit: PER_PAGE,
+      },
+      
+      populate: "*",
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+
+  const res = await fetch(`${API_URL}/api/eventsses?${query}`);
+
+  const events = await res.json();
+
+  return {
+    props: { events, pageCount },
+  };
+}
+
+
+
+/********** end of  paernt **********/
+/************************************/
+
+
+
+
+
+
+/**********  Pagination **********/
+
+
+import React from "react";
+import Link from "next/link";
+import { PER_PAGE } from "@config/index";
+
+const Pagination = ({ pageCount, totalPage }) => {
+  const lastPage = Math.ceil(totalPage / PER_PAGE);
+
+  return (
+    <>
+      {/* previous page */}
+      {pageCount > 1 && (
+        <Link href={`/events?page=${pageCount - 1}`}>
+          <a className="btn-secondary">Prev</a>
+        </Link>
+      )}
+
+      {/* next page */}
+      {pageCount < lastPage && (
+        <Link href={`/events?page=${pageCount + 1}`}>
+          <a className="btn-secondary">Next</a>
+        </Link>
+      )}
+    </>
+  );
+};
+
+export default Pagination;
+
+
+/********** end of  Pagination **********/
+
+
+
+
+
+
+
+
+
+
+

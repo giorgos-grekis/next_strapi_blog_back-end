@@ -1,0 +1,19 @@
+  const res = await fetch(`${API_URL}/api/eventsses/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: values }),
+      });
+
+      if (!res.ok) {
+        toast.error("Something Went Worng");
+      }
+
+      else {
+        const evt = await res.json();
+        
+        console.log('evnt: ', evt)
+  
+        router.push(`/events/${evt?.data?.attributes?.slug}`);
+      }
